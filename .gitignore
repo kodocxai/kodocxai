@@ -1,0 +1,72 @@
+# ─────────────────────────────────────────────────────────────────────
+# AI-Hub 원본 데이터 차단 — 재배포 금지 대상이다. 실수로라도 올라가면 안 된다.
+# 「행정문서 대상 OCR 데이터」는 재배포가 금지되어 있고 신청 자격도 국내 거주자로
+# 제한된다. 이 저장소는 주석 레이어(문서 ID·필드 유형·어절 인덱스)만 담는다.
+# ─────────────────────────────────────────────────────────────────────
+
+# 문서 이미지 — 어떤 형식이든
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+*.webp
+*.pdf
+images/
+*images*/
+
+# 원본 텍스트·좌표가 든 중간 산출물
+docs.jsonl
+docs_*.jsonl
+train.jsonl
+dev.jsonl
+test.jsonl
+*.raw.jsonl
+data/
+_pilot/
+raw/
+
+# AI-Hub 배포 아카이브
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# 학습 산출물 — 가중치에는 학습 데이터가 배어 있다
+runs/
+checkpoints/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# ── 예외: 공개 대상 산출물은 위 규칙에 걸려도 통과시킨다 ────────────────
+!annotations/kodocxai_v*.jsonl
+!annotations/manifest_public.json
+!demo/**/*.png
+!demo/**/*.json
+
+# ─────────────────────────────────────────────────────────────────────
+# 일반
+# ─────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+*.log
+*.tmp
+_scratch/
+_backup/

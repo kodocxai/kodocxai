@@ -1,0 +1,10 @@
+KoDocXAI benchmark v1.0 — annotation layer
+Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+[공개 전 처리]
+- CC BY 4.0 legalcode 전문을 이 파일 아래에 vendoring 할 것
+- 저작자 표기: [＿저자명/소속]
+- 본 주석 레이어는 AI-Hub 원본 데이터를 포함하지 않는다(문서 식별자·필드 타입·상태·
+  어절 인덱스만). 원본 데이터의 이용은 AI-Hub 이용약관을 따르며, 파생물 출처 표기
+  의무(한국지능정보사회진흥원 사업결과 명시)는 README의 Attribution 절을 따른다.
