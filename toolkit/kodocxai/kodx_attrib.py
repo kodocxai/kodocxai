@@ -229,3 +229,49 @@ def aopc_full(eval_masked: Callable[[Sequence[int]], float],
     for i in range(1, len(order) + 1):
         total += full_output - eval_masked(order[:i])
     return total / len(order)
+
+# ---------------------------------------------------------------------------
+# 교란 — 레이아웃 (2026-10-26 재실행용, 논문 5.3절 서술과 일치하는 구현)
+#
+# 기존 jitter_boxes 는 토큰마다 이동량을 뽑아 한 어절의 서브워드가 서로 다른 곳으로
+# 흩어졌고, 기존 swap 상대 선택(kodx_eval.py)은 정답 밖 토큰을 문서 순서대로 앞에서
+# 뽑아 "다른 필드의 주석 스팬" 조건이 없었다(외부 독립 검토 10-26 지적). 아래 두
+# 함수가 서술대로의 구현이다. 기존 함수는 표 7 초판 산출 기록을 위해 그대로 둔다.
+# ---------------------------------------------------------------------------
+
+def jitter_boxes_by_word(bbox: torch.Tensor, token_idx: Sequence[int],
+                         word_of_token: Sequence[Optional[int]], delta: int,
+                         generator: torch.Generator) -> torch.Tensor:
+    """어절마다 이동량 하나를 뽑아 그 어절의 모든 서브워드 상자에 같은 값을 더한다.
+
+    상자가 통째로 옮겨지므로 폭·높이가 유지된다(경계 클램프 제외). 좌표계 0~1000.
+    word_of_token[t] 는 토큰 t 가 속한 어절 번호(특수 토큰은 None).
+    """
+    out = bbox.clone()
+    if not token_idx:
+        return out
+    words = sorted({word_of_token[t] for t in token_idx if word_of_token[t] is not None})
+    shifts = torch.randint(-delta, delta + 1, (len(words), 2),
+                           generator=generator).to(bbox.device)
+    w2k = {w: k for k, w in enumerate(words)}
+    for t in token_idx:
+        w = word_of_token[t]
+        if w is None:
+            continue
+        k = w2k[w]
+        out[0, t, 0::2] = (out[0, t, 0::2] + shifts[k, 0]).clamp(0, 1000)
+        out[0, t, 1::2] = (out[0, t, 1::2] + shifts[k, 1]).clamp(0, 1000)
+    return out
+
+
+def swap_partner_tokens(word_of_token: Sequence[Optional[int]], gold_tk: Sequence[int],
+                        other_field_words: set) -> list:
+    """좌표 교환 상대: 읽기 순서상 가장 앞의, 다른 필드 주석 스팬에 속한 비정답 토큰들.
+
+    정답 토큰 수만큼만 돌려준다(일대일 교환, 짧은 쪽 길이까지). 비어 있으면 그
+    인스턴스는 교환 조건에서 제외한다. 교환은 결정적이며 난수를 쓰지 않는다.
+    """
+    gold = set(gold_tk)
+    cand = [t for t, w in enumerate(word_of_token)
+            if w is not None and w in other_field_words and t not in gold]
+    return cand[: len(gold_tk)]
