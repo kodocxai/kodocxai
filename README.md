@@ -32,7 +32,7 @@ Licensing is per directory - the brand is one, the licenses are two.
 | `scripts/` | `reassemble.py` (join the annotation layer with your own AI-Hub download; deterministic, manifest-based) and `verify.py` (integrity check) | MIT |
 | `guidelines/` | Annotation guideline v1.4, full text (Korean; an English version is provided in the paper's Supplementary Material S1) | CC BY 4.0 |
 | `rubric/` | Qualitative-layer rubric and application protocol (Korean; English version in Supplementary Material S2) | CC BY 4.0 |
-| `analyses/` | Scripts and result tables of the additional analyses of the revised version (span-level rollout target, alternative text perturbations with the fixed 100-document sample list, matched perturbation budgets, dilated reference regions, seed-paired differences, two further attribution methods, two further training seeds, a second LiLT backbone); see `analyses/README.md` | MIT |
+| `analyses/` | Scripts and result tables of the additional analyses (revision-round analyses of the revised version: span-level rollout target, alternative text perturbations with the fixed 100-document sample list, matched perturbation budgets, dilated reference regions, seed-paired differences, two further attribution methods, two further training seeds, a second LiLT backbone; and the later additions: shortcut baselines for plausibility, explanation targets split by prediction outcome); see `analyses/README.md` | MIT |
 | `attributions/` | Per-instance attribution scores (`phi_*.jsonl`: document identifier, field, method, and a 512-value score vector per instance) for the fine-tuned seeds and the LiLT backbone, so that the plausibility and faithfulness tables can be recomputed without re-running attribution | CC BY 4.0 |
 
 ## What is not included, and why
@@ -73,9 +73,10 @@ the SHA-256 hashes recorded in `annotations/manifest_public.json`.
 
 `toolkit/kodocxai/` holds the training (`kodx_train.py`), evaluation
 (`kodx_eval.py`) and reporting (`report_kodx.py`) pipeline of the main
-experiments. `analyses/` holds the scripts of the additional analyses reported
-in Supplementary Document S4 of the revised version, each with its result
-table; the attribution vectors they consume are in `attributions/`, so the
+experiments. `analyses/` holds the scripts of the additional analyses (those
+reported in Supplementary Document S4 of the revised version, plus the later
+additions listed in `analyses/README.md`), each with its result table or
+note; the attribution vectors they consume are in `attributions/`, so the
 tables can be recomputed on CPU from the released files once the benchmark has
 been reassembled.
 
